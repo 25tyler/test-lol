@@ -162,6 +162,12 @@ class QuestsInterface {
     switchCategory(category) {
         if (this.currentCategory === category) return;
 
+        // Update active category button first
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
         // Animate out current content
         const currentContent = document.querySelector('.quest-category-content.active');
         if (currentContent) {
@@ -176,13 +182,10 @@ class QuestsInterface {
                     this.showCategoryContent(category);
                 }
             });
+        } else {
+            // If no current content, show the new category directly
+            this.showCategoryContent(category);
         }
-
-        // Update active category button
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        document.querySelector(`[data-category="${category}"]`).classList.add('active');
 
         this.currentCategory = category;
     }
@@ -192,6 +195,11 @@ class QuestsInterface {
      */
     showCategoryContent(category) {
         const content = document.getElementById(`${category}-quests`);
+        if (!content) {
+            console.error(`Content for category '${category}' not found`);
+            return;
+        }
+        
         content.classList.add('active');
         
         // Reset quest items for animation
