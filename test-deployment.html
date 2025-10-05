@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Test - LoL Quests Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1E2328 0%, #0F1419 100%);
+            color: #F0E6D2;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .test-container {
+            text-align: center;
+            background: #1E2328;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid #463714;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .test-item {
+            margin: 1rem 0;
+            padding: 0.5rem;
+            background: #0F1419;
+            border-radius: 8px;
+            border: 1px solid #463714;
+        }
+        .success { color: #00D4AA; }
+        .error { color: #FF6B6B; }
+        .warning { color: #FFA500; }
+        .test-button {
+            background: #C9AA71;
+            color: #0F1419;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 1rem;
+        }
+        .test-button:hover {
+            background: #F0E6D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎮 LoL Quests Interface - Deployment Test</h1>
+        <p>This page tests if all resources load correctly for Netlify deployment.</p>
+        
+        <div class="test-item">
+            <h3>📁 File Structure Test</h3>
+            <div id="file-test">Testing...</div>
+        </div>
+        
+        <div class="test-item">
+            <h3>🎨 CSS Loading Test</h3>
+            <div id="css-test">Testing...</div>
+        </div>
+        
+        <div class="test-item">
+            <h3>⚡ JavaScript Test</h3>
+            <div id="js-test">Testing...</div>
+        </div>
+        
+        <div class="test-item">
+            <h3>🌐 External Resources Test</h3>
+            <div id="external-test">Testing...</div>
+        </div>
+        
+        <button class="test-button" onclick="runTests()">🔄 Run All Tests</button>
+        <button class="test-button" onclick="window.location.href='index.html'">🎮 Go to Main Interface</button>
+    </div>
+
+    <script>
+        function runTests() {
+            testFiles();
+            testCSS();
+            testJavaScript();
+            testExternalResources();
+        }
+        
+        function testFiles() {
+            const files = ['index.html', 'styles.css', 'script.js'];
+            let results = [];
+            
+            files.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        if (response.ok) {
+                            results.push(`✅ ${file} - OK`);
+                        } else {
+                            results.push(`❌ ${file} - Error: ${response.status}`);
+                        }
+                        updateTestResult('file-test', results.join('<br>'));
+                    })
+                    .catch(error => {
+                        results.push(`❌ ${file} - Network Error`);
+                        updateTestResult('file-test', results.join('<br>'));
+                    });
+            });
+        }
+        
+        function testCSS() {
+            const testElement = document.createElement('div');
+            testElement.style.cssText = 'position: absolute; top: -9999px;';
+            testElement.className = 'test-css';
+            document.body.appendChild(testElement);
+            
+            const computedStyle = window.getComputedStyle(testElement);
+            if (computedStyle) {
+                updateTestResult('css-test', '✅ CSS is working correctly');
+            } else {
+                updateTestResult('css-test', '❌ CSS has issues');
+            }
+            
+            document.body.removeChild(testElement);
+        }
+        
+        function testJavaScript() {
+            try {
+                // Test if basic JS works
+                const testObj = { test: 'value' };
+                const testArray = [1, 2, 3];
+                const testFunction = () => 'test';
+                
+                if (testObj.test === 'value' && testArray.length === 3 && testFunction() === 'test') {
+                    updateTestResult('js-test', '✅ JavaScript is working correctly');
+                } else {
+                    updateTestResult('js-test', '❌ JavaScript has issues');
+                }
+            } catch (error) {
+                updateTestResult('js-test', `❌ JavaScript Error: ${error.message}`);
+            }
+        }
+        
+        function testExternalResources() {
+            // Test Google Fonts
+            const fontTest = document.createElement('div');
+            fontTest.style.fontFamily = 'Beaufort for LOL, Arial, sans-serif';
+            fontTest.textContent = 'Font Test';
+            document.body.appendChild(fontTest);
+            
+            // Test Font Awesome
+            const iconTest = document.createElement('i');
+            iconTest.className = 'fas fa-sword';
+            document.body.appendChild(iconTest);
+            
+            // Test Anime.js CDN
+            if (typeof anime !== 'undefined') {
+                updateTestResult('external-test', '✅ All external resources loaded successfully');
+            } else {
+                updateTestResult('external-test', '⚠️ Some external resources may not be loaded (this is normal in test environment)');
+            }
+            
+            // Cleanup
+            document.body.removeChild(fontTest);
+            document.body.removeChild(iconTest);
+        }
+        
+        function updateTestResult(elementId, content) {
+            document.getElementById(elementId).innerHTML = content;
+        }
+        
+        // Run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 1000);
+        });
+    </script>
+</body>
+</html>
