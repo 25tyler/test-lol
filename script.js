@@ -427,46 +427,6 @@ class QuestsInterface {
         });
     }
 
-    /**
-     * Animate progress update
-     */
-    animateProgressUpdate(questId, newProgress) {
-        const questItem = document.querySelector(`[data-quest="${questId}"]`);
-        const progressFill = questItem.querySelector('.progress-fill');
-        const progressText = questItem.querySelector('.progress-text');
-        
-        const [current, total] = progressText.textContent.split('/').map(Number);
-        const newCurrent = Math.min(current + newProgress, total);
-        const percentage = (newCurrent / total) * 100;
-        
-        // Update text
-        progressText.textContent = `${newCurrent}/${total}`;
-        
-        // Animate progress bar
-        anime({
-            targets: progressFill,
-            width: `${percentage}%`,
-            duration: 800,
-            easing: 'easeOutQuart'
-        });
-
-        // Check if quest is now claimable
-        if (newCurrent >= total) {
-            const claimBtn = questItem.querySelector('.claim-btn');
-            claimBtn.classList.add('claimable');
-            claimBtn.disabled = false;
-            claimBtn.innerHTML = '<i class="fas fa-check"></i>';
-            
-            // Animate button change
-            anime({
-                targets: claimBtn,
-                backgroundColor: ['#1E2328', '#00D4AA'],
-                borderColor: ['#463714', '#00D4AA'],
-                duration: 500,
-                easing: 'easeOutQuart'
-            });
-        }
-    }
 }
 
 // Initialize the quest interface when DOM is loaded
@@ -482,13 +442,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('- Progress tracking');
     console.log('- Responsive design');
     
-    // Demo: Simulate progress updates (for testing)
-    setTimeout(() => {
-        console.log('🎯 Demo: Simulating quest progress...');
-        // You can uncomment these to test progress animations
-        // questsInterface.animateProgressUpdate('win-games', 1);
-        // questsInterface.animateProgressUpdate('kill-minions', 10);
-    }, 2000);
 });
 
 // Export for potential module usage
